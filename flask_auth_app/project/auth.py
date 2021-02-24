@@ -5,6 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
 from .models import User
 from . import db
+from sqlalchemy.orm.attributes import flag_modified
+from sqlalchemy import update
 
 auth = Blueprint('auth', __name__)
 #when creating a new page you have to render it first
@@ -34,37 +36,24 @@ def login_post():
 
 @auth.route('/profile', methods=['POST'])
 def profile_post():
-    name = request.form.get('name')
+    user = User.query.filter_by(id='1').first() #finds the queried id and sets it to user
+
+    newname = request.form.get('name')
     address1 = request.form.get('Address1')
     address2 = request.form.get('Address2')
     city = request.form.get('city')
     state = request.form.get('State')
     zipCode = request.form.get('ZipCode')
 
-    num_rows_updated = User.query.filter_by(name='name').update(dict(name='name'))
-    db.session.commit()
+    #changes the name of ID 1 in the sqlite db
 
-    num_rows_updated = User.query.filter_by(Address_1='address1').update(dict(Address_1='address1'))
-    db.session.commit()
-
-    num_rows_updated = User.query.filter_by(Address_2='address2').update(dict(Address_2='address2'))
-    db.session.commit()
-
-    num_rows_updated = User.query.filter_by(City='city').update(dict(City='city'))
-    db.session.commit()
-
-    num_rows_updated = User.query.filter_by(State='state').update(dict(State='state'))
-    db.session.commit()
-
-    num_rows_updated = User.query.filter_by(Zip='zipcode').update(dict(Zip='zipcode'))
-    db.session.commit()
-
-
-   # user = User.query.filter_by(name=name).first()
-    #remember = True if request.form.get('remember') else False
-    # db.session.add(new_user)
-    # db.session.commit()
-
+    user.name = newname #sets the new name
+    user.Address_1 = address1
+    user.Address_2 = address2
+    user.City = city
+    user.State = state
+    user.Zip = zipCode
+    db.session.commit() #comit updates the db
 
 
     return redirect(url_for('main.profile'))
