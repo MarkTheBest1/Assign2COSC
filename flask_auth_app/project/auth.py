@@ -22,10 +22,7 @@ def login_post():
 
     user = User.query.filter_by(name=name).first()
 
-    # check if user actually exists
-
-
-
+    # check if user actually exist
     # take the user supplied password, hash it, and compare it to the hashed password in database
     if not user or not check_password_hash(user.password, password): 
         flash('Please check your login details and try again.')
@@ -44,9 +41,26 @@ def profile_post():
     state = request.form.get('State')
     zipCode = request.form.get('ZipCode')
 
-    user = User.query.filter_by(name=name).first()
+    num_rows_updated = User.query.filter_by(name='name').update(dict(name='name'))
+    db.session.commit()
 
-    # check if user actually exists
+    num_rows_updated = User.query.filter_by(Address_1='address1').update(dict(Address_1='address1'))
+    db.session.commit()
+
+    num_rows_updated = User.query.filter_by(Address_2='address2').update(dict(Address_2='address2'))
+    db.session.commit()
+
+    num_rows_updated = User.query.filter_by(City='city').update(dict(City='city'))
+    db.session.commit()
+
+    num_rows_updated = User.query.filter_by(State='state').update(dict(State='state'))
+    db.session.commit()
+
+    num_rows_updated = User.query.filter_by(Zip='zipcode').update(dict(Zip='zipcode'))
+    db.session.commit()
+
+
+   # user = User.query.filter_by(name=name).first()
     #remember = True if request.form.get('remember') else False
     # db.session.add(new_user)
     # db.session.commit()
