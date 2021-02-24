@@ -38,7 +38,15 @@ def login_post():
 @auth.route('/profile', methods=['POST'])
 def profile_post():
     name = request.form.get('name')
-    Address1=request.form.get('')
+    address1 = request.form.get('Address1')
+    address2 = request.form.get('Address2')
+    city = request.form.get('city')
+    state = request.form.get('State')
+    zipCode = request.form.get('ZipCode')
+
+    user = User.query.filter_by(name=name).first()
+
+    # check if user actually exists
     #remember = True if request.form.get('remember') else False
     # db.session.add(new_user)
     # db.session.commit()
