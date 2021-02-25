@@ -36,8 +36,10 @@ def login_post():
 
 @auth.route('/profile', methods=['POST'])
 def profile_post():
-    user = User.query.filter_by(id='1').first() #finds the queried id and sets it to user
+    user = User.query.filter_by(id= User.id).first() #finds the queried id and sets it to user
 
+
+    #these variables will hold the info the user types in when they login
     newname = request.form.get('name')
     address1 = request.form.get('Address1')
     address2 = request.form.get('Address2')
@@ -45,18 +47,30 @@ def profile_post():
     state = request.form.get('State')
     zipCode = request.form.get('ZipCode')
 
-    #changes the name of ID 1 in the sqlite db
 
+    #this then assigns the database's field with the variables above
     user.name = newname #sets the new name
     user.Address_1 = address1
     user.Address_2 = address2
     user.City = city
     user.State = state
     user.Zip = zipCode
-    db.session.commit() #comit updates the db
+    db.session.commit() #This updates the information in the database
 
+    #this statement gets all of the data that is stored in the databse
+    users = User.query.all()
+    data = users #sets it to users object that is above
 
-    return redirect(url_for('main.profile'))
+    #the return statement reloads the profile webpage with the newly entered information to show the user
+    #that the info they put in is now saved
+    #also passes data into the html file to be later displayed
+
+    #shows new message at the top.
+    message="If your information isn't up to date please fill in the form below"
+
+    return render_template("profile.html", name=newname, Address_1=address1,Address_2=address2,
+                           City=city, State=state,Zip=zipCode, data=data,message=message)
+
 
 @auth.route('/signup')
 def signup():

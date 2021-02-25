@@ -4,35 +4,72 @@
 
 {% block content %}
 <h1 class="title">
-  Welcome, {{ name }}!
+  Welcome, {{ name }}!<br>
+	{{message}}
 </h1>
 <section>
 <form method="POST" action="/profile">
             <div class="field">
                 <div class="control">
-                    <input class="input is-large" type="name" name="name" placeholder="Your Name" autofocus="">
+                    <input class="input is-large" type="name" name="name" placeholder= "{{name}}" autofocus="">
                 </div>
             </div>
 
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="text" name="Address1" placeholder="Address 1">
-                </div>
-            </div>
+			<!-- This is an if statement that checks to see if the Adrress_1 field for the user is blank. If it is blank
+			then it displays Address1 to signify that they should update their info.
+			This is repeated for every one of the person's data
 
-            <div class="field">
+			The data is passed back into the profile page from the return statement in Auth.py under profile post
+			You can acess the parameter variable by using {{ variable }}
+			-->
+			{% if Address_1 is none %}
+        		<div class="field">
+             	   <div class="control">
+                	    <input class="input is-large" type="text" name="Address1" placeholder="Address 1">
+               	 </div>
+				</div>
+    		{% else %}
+        		<div class="field">
+             	   <div class="control">
+                	    <input class="input is-large" type="text" name="Address1" placeholder="{{Address_1}}">
+               	 </div>
+				</div>
+			{% endif %}
+
+
+			{% if Address_2 is none %}
+        		<div class="field">
                 <div class="control">
                     <input class="input is-large" type="text" name="Address2" placeholder="Address 2 (optional)">
                 </div>
             </div>
+    		{% else %}
+        		<div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="Address2" placeholder="{{Address_2}}">
+                </div>
+            </div>
+			{% endif %}
 
-            <div class="field">
+
+			{% if City is none %}
+        	<div class="field">
                 <div class="control">
                     <input class="input is-large" type="text" name="city" placeholder="City">
                 </div>
             </div>
+    		{% else %}
+        	<div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="city" placeholder="{{City}}">
+                </div>
+            </div>
+			{% endif %}
 
-            <div class="field">
+
+
+			{% if State is none %}
+        	<div class="field">
                 <div class="control">
                     <input list="State" class="input is-large" type="text" name="State" placeholder="State">
                       <datalist id="State">
@@ -88,15 +125,68 @@
 	<option value="WI">WI</option>
 	<option value="WY">WY</option>
                     </datalist>
-                </div>
+					</div>
+            </div>
+    		{% else %}
+        	<div class="field">
+                <div class="control">
+                    <input list="State" class="input is-large" type="text" name="State" placeholder="{{State}}">
+					</div>
             </div>
 
-    <div class="field">
+			{% endif %}
+
+
+
+	{% if Zip is none %}
+        	<div class="field">
                 <div class="control">
                     <input class="input is-large" type="text" name="ZipCode" placeholder="Zipcode">
                 </div>
-            </div>
+	</div>
+    		{% else %}
+        	<div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="ZipCode" placeholder="{{Zip}}">
+                </div>
+	</div>
+			{% endif %}
+
+
 			<input type="submit" value="Submit">
             </form>
 </section>
+
+<!-- creates a table with the data that is passed into it in the Auth.py return.
+ 	It is displayed using a for loop
+
+ -->
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Address1</th>
+		<th>Address2</th>
+		<th>City</th>
+		<th>State</th>
+        <th>ZipCode</th>
+    </tr>
+    </thead>
+	{%for i in data%}
+    <tbody>
+
+ 			 <td>{{i.id}}</td>
+                <td>{{i.name}}</td>
+                <td>{{i.Address_1}}</td>
+                <td>{{i.Address_2}}</td>
+				<td>{{i.City}}</td>
+				<td>{{i.State}}</td>
+				<td>{{i.Zip}}</td>
+				<br>
+
+    </tbody>
+	{%endfor%}
+</table>
+
 {% endblock %}

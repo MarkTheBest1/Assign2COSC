@@ -12,4 +12,9 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', name=current_user.name)
+    #this is the first render for profile, if the user is new then the html file will know to only display
+    #the necessary title:Ex. Address1, Address 2...
+    message="Please enter your information before continuing"
+    return render_template('profile.html', name=current_user.name, Address_1=current_user.Address_1,
+                           Address_2=current_user.Address_2,City=current_user.City,State=current_user.State,
+                           Zip=current_user.Zip,message=message)
