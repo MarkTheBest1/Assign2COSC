@@ -27,6 +27,11 @@
                             <a href="{{ url_for('main.profile') }}" class="navbar-item">
                                 Profile
                             </a>
+							{% endif %}
+							{% if current_user.is_authenticated %}
+                            <a href="{{ url_for('main.fuelquote') }}" class="navbar-item">
+                                Fuel Requests
+                            </a>
                             {% endif %}
                             {% if not current_user.is_authenticated %}
                             <a href="{{ url_for('auth.login') }}" class="navbar-item">

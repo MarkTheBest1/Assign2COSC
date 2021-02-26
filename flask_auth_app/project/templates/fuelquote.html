@@ -1,0 +1,66 @@
+<!-- templates/profile.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+<form method="POST" action="/fuelquote">
+			<h3 class="title">Fuel Quote Request</h3>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="gallonsrequested" name="gallonsrequested" placeholder="Gallons Requested">
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="deliveryaddress" name="deliveryaddress" placeholder="Delivery Address">
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="deliverydate" name="deliverydate" placeholder="Delivery Date">
+                </div>
+            </div>
+			
+			<!-- This is an if statement that checks to see if the Adrress_1 field for the user is blank. If it is blank
+			then it displays Address1 to signify that they should update their info.
+			This is repeated for every one of the person's data
+
+			The data is passed back into the profile page from the return statement in Auth.py under profile post
+			You can acess the parameter variable by using {{ variable }}
+			-->
+
+
+			<input type="submit" value="Submit">
+			<h3> {{ pricestring }} </h3>
+			<h3> {{ amountduestring }} </h3>
+            </form>
+</section>
+
+<!-- creates a table with the data that is passed into it in the Auth.py return.
+ 	It is displayed using a for loop
+ -->
+
+<table>
+    <thead>
+    <tr>
+        <th>Gallons Requested   |</th>
+		<th>Delivery Address   |</th>
+		<th>Delivery Date   |</th>
+		<th>Suggested Price   |</th>
+        <th>Total Amount Due</th>
+    </tr>
+    </thead>
+	{%for i in data%}
+    <tbody>
+                <td>{{i.gallons}}</td>
+                <td>{{i.address}}</td>
+                <td>{{i.date}}</td>
+				<td>{{i.price_gallon}}</td>
+				<td>{{i.amount}}</td>
+				<br>
+
+    </tbody>
+	{%endfor%}
+</table>
+{% endblock %}

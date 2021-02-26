@@ -22,7 +22,7 @@ class User(UserMixin, db.Model):
 class Fuel(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)  # primary keys are required by SQLAlchemy
     gallons =db.Column(db.Integer)
-    Adrress = password = db.Column(db.String(100))
+    address = db.Column(db.String(100))
     date = db.Column(db.String(9))
     price_gallon=db.Column(db.Integer)
     amount=db.Column(db.Integer)

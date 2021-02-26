@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
 from .models import User
+from .models import Fuel
 from . import db
 from sqlalchemy.orm.attributes import flag_modified
 from sqlalchemy import update
@@ -21,7 +22,7 @@ def login_post():
     username = request.form.get('name')
     password = request.form.get('password')
     remember = True if request.form.get('remember') else False
-
+    
     user = User.query.filter_by(username=username).first()
 
     # check if user actually exist
@@ -33,6 +34,36 @@ def login_post():
     # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=remember)
     return redirect(url_for('main.profile'))
+
+@auth.route('/fuelquote', methods=['POST'])
+def fuelquote_post():
+    gallonsrequested = request.form.get('gallonsrequested')
+    deliveryaddress = request.form.get('deliveryaddress')
+    deliverydate = request.form.get('deliverydate')
+    pricepergallon = 0
+    amountdue = int(gallonsrequested) * pricepergallon
+    
+    
+    
+    user = Fuel()
+    user.gallons = int(gallonsrequested)
+    user.address = deliveryaddress
+    user.date = deliverydate
+    user.price_gallon = float(pricepergallon)
+    user.amount = amountdue
+    db.session.add(user)
+    db.session.commit()
+    
+    
+    fuels = Fuel.query.all()
+    data = fuels
+    
+    
+    
+    pricestring = "Suggested Price per Gallon: " + str(pricepergallon)
+    amountduestring = "Total Amount Due: " + str(amountdue)
+    return render_template('fuelquote.html', pricestring = pricestring, amountduestring = amountduestring, data=data)
+################################################################################################################
 
 @auth.route('/profile', methods=['POST'])
 def profile_post():

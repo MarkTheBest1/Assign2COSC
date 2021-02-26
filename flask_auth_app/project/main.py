@@ -18,3 +18,8 @@ def profile():
     return render_template('profile.html', name=current_user.name, Address_1=current_user.Address_1,
                            Address_2=current_user.Address_2,City=current_user.City,State=current_user.State,
                            Zip=current_user.Zip,message=message)
+
+@main.route('/fuelquote')
+@login_required
+def fuelquote():
+    return render_template('fuelquote.html',pricestring = "", amountduestring = "")

@@ -160,33 +160,7 @@
 <!-- creates a table with the data that is passed into it in the Auth.py return.
  	It is displayed using a for loop
 
+
+
  -->
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Address1</th>
-		<th>Address2</th>
-		<th>City</th>
-		<th>State</th>
-        <th>ZipCode</th>
-    </tr>
-    </thead>
-	{%for i in data%}
-    <tbody>
-
- 			 <td>{{i.id}}</td>
-                <td>{{i.name}}</td>
-                <td>{{i.Address_1}}</td>
-                <td>{{i.Address_2}}</td>
-				<td>{{i.City}}</td>
-				<td>{{i.State}}</td>
-				<td>{{i.Zip}}</td>
-				<br>
-
-    </tbody>
-	{%endfor%}
-</table>
-
 {% endblock %}
