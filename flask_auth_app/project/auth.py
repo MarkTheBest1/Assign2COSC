@@ -69,14 +69,45 @@ def fuelquote_post():
 def profile_post():
     user = User.query.filter_by(id= User.id).first() #finds the queried id and sets it to user
 
-
+    errors = False
     #these variables will hold the info the user types in when they login
     newname = request.form.get('name')
+    if len(newname) > 50:
+        flash('Name has to be less than 50 characters')
+        errors=True
+
     address1 = request.form.get('Address1')
+    if len(address1) > 100:
+        flash('Address1 has to be less than 100 characters')
+        errors = True
+
     address2 = request.form.get('Address2')
+    if len(address2) > 100:
+        flash('Address2 has to be less than 100 characters')
+        errors = True
+
     city = request.form.get('city')
+    if len(city) > 100:
+        flash('City has to be less than 100 characters')
+        errors = True
+
     state = request.form.get('State')
+    if len(state) > 2:
+        flash('State has to be 2 letter abbreviation')
+        errors = True
+
     zipCode = request.form.get('ZipCode')
+    if len(zipCode) <4 and len(zipCode) >9:
+        flash('Zip code has to be more than 5 numbers and less than 9')
+        errors = True
+
+    if errors:
+        return redirect(url_for('auth.profile_post'))
+
+
+    #
+    # After user has entered things we could do another check under here for the
+    # required info
 
 
     #this then assigns the database's field with the variables above
