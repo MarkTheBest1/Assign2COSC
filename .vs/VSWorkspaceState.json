@@ -1,0 +1,10 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\flask_auth_app",
+    "\\flask_auth_app\\project",
+    "\\flask_auth_app\\project\\templates"
+  ],
+  "SelectedNode": "\\flask_auth_app\\project\\templates\\base.html",
+  "PreviewInSolutionExplorer": false
+}
