@@ -1,4 +1,5 @@
 # auth.py
+import sqlite3
 
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -37,26 +38,85 @@ def login_post():
 
 @auth.route('/fuelquote', methods=['POST'])
 def fuelquote_post():
+
     gallonsrequested = request.form.get('gallonsrequested')
     deliveryaddress = request.form.get('deliveryaddress')
     deliverydate = request.form.get('deliverydate')
-    pricepergallon = 0
-    amountdue = int(gallonsrequested) * pricepergallon
-    
-    
+    pricepergallon = 1.50
+
+    locationFactor=0
+
     
     user = Fuel()
     user.gallons = int(gallonsrequested)
     user.address = deliveryaddress
     user.date = deliverydate
     user.price_gallon = float(pricepergallon)
+
+
+    #finds the correct user by the id so the fuel module can then use the correct state that belongs to that user
+    temp = User.query.filter_by(id= Fuel.id).first() #finds the queried id and sets it to user
+    #print(temp.State)
+
+    #
+    # Sets the location factor based on where the user is found
+    #
+    if temp.State == "TX" :
+        locationFactor=0.02
+    else:
+        locationFactor=0.04
+
+    #
+    # Sets the rate History Factor
+    #
+    missing = Fuel.query.filter_by(address=temp.Address_1).first() #queries by address; the users profiel address and
+    #the delivery address has to be the same
+    if missing is None :
+        rateHistory = 0.0#if the address has NOT bought before then the person gets NO the discount
+    else:
+        rateHistory = 0.01 #if the address has bought before then the person gets the discount
+
+    #
+    # Gallons requested factor
+    #
+    galRequestfactor=0
+    if int(gallonsrequested) > 1000:
+        galRequestfactor = 0.02
+    else:
+        galRequestfactor = 0.03
+
+    #
+    # company profit factor
+    #
+    companyProfitFactor = 0.10
+
+    #
+    # marginfactor
+    #
+    margin = (locationFactor - rateHistory + galRequestfactor + companyProfitFactor) * pricepergallon
+
+    #
+    # suggested price & amount due
+    #
+    suggestedPrice_gallon = pricepergallon + margin
+
+    amountdue = int(gallonsrequested) * suggestedPrice_gallon
     user.amount = amountdue
-    db.session.add(user)
-    db.session.commit()
-    
-    
-    fuels = Fuel.query.all()
-    data = fuels
+
+    #if the userclicks on the actual submit button then the data is actually added to db
+    if "submit" in request.form:
+        db.session.add(user)
+        db.session.commit()
+    elif "quote" in request.form:
+        flash('$' + str(amountdue)) #sends the message to the html
+
+
+
+
+    #gets the past fuel deliveries by address so data will only have the data for that one person
+    pastFuel = Fuel.query.filter_by(address=temp.Address_1).all()
+
+    data = pastFuel
     
     
     
